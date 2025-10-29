@@ -1,0 +1,121 @@
+services:
+  # -----------------------
+  #  SEQ - Central de logs
+  # -----------------------
+  seq:
+    image: datalust/seq:latest
+    ports:
+      - "5340:80"
+      - "5341:5341"
+    environment:
+      - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_ADMINPASSWORDHASH=QEfU0sEraJh6VKrCqufKPjE6mdc2IwjDIifOTkAxcG0BNQzvf4dqoTM/tH5CNMpXNPfIgHrFyctNCGWZ0pprWdr3XoQWHoHhrgbVpiW6sKZR
+    networks:
+      - contractnet
+        
+  contractmanager.api:
+    image: contractmanagerapi
+    container_name: ContractManager.Api
+    labels:
+      com.microsoft.visual-studio.project-name: "ContractManager.Api"
+    build:
+      context: .
+      dockerfile: src/contracts/ContractManager.Api/Dockerfile
+      args:
+        - BUILD_CONFIGURATION=Debug    
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__DefaultConnection=Server=contractmanager-db;Database=contracts;User Id=sa;Password=Password1234!;TrustServerCertificate=True;MultipleActiveResultSets=true
+      - MessagingSettings__Host=rabbitmq
+      - MessagingSettings__Username=guest
+      - MessagingSettings__Password=guest
+      - MessagingSettings__VirtualHost=/
+      - RedisSettings__Host=redis
+      - RedisSettings__Port=6379
+      - DynamoSettings__ServiceURL=http://dynamodb:8000
+      - DynamoSettings__Region=us-east-1
+      - DynamoSettings__AccessKeyId=fakeMyKeyId
+      - DynamoSettings__SecretAccessKey=fakeSecretAccessKey
+    networks:
+      - contractnet
+    ports:
+      - "6500:8080"
+    depends_on:
+      - contractmanager-db
+      - rabbitmq
+      - redis
+      - dynamodb
+      - dynamodb-admin
+      - seq
+      
+  contractmanager-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: ContractManager.SqlServer
+    environment:
+      - SA_PASSWORD=Password1234!
+      - ACCEPT_EULA=Y
+    networks:
+      - contractnet
+    volumes:
+      - contract-sqldata:/var/opt/mssql
+    ports:
+      - "1433:1433"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    networks:
+      - contractnet
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  redis:
+    image: redis:7
+    container_name: redis
+    networks:
+      - contractnet
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+
+  dynamodb:
+    image: amazon/dynamodb-local
+    container_name: dynamodb
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /data"
+    networks:
+      - contractnet
+    volumes:
+      - ./dynamo_data:/data
+    ports:
+      - "8000:8000"
+
+  dynamodb-admin:
+    image: aaronshaf/dynamodb-admin
+    container_name: dynamodb-admin
+    environment:
+      - DYNAMO_ENDPOINT=http://host.docker.internal:8000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8010:8001"
+    networks:
+      - contractnet
+    depends_on:
+      - dynamodb
+
+networks:
+  contractnet:
+    
+volumes:
+  contract-sqldata:
+  rabbitmq_data:
+  redis_data:
+  dynamo_data:
