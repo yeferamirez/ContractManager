@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>c261f6fb-b5d4-486b-985b-2425e7decf6a</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
+    <DockerComposeProjectPath>..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoFixture" Version="4.18.1" />
+		<PackageReference Include="AutoMapper" Version="14.0.0" />
+		<PackageReference Include="Bogus" Version="35.6.2" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+		<PackageVersion Include="MassTransit" Version="8.3.6" />
+		<PackageReference Include="MassTransit.RabbitMQ" Version="8.3.6" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\shared\ContractManager.Shared.Api\ContractManager.Shared.Api.csproj" />
+	  <ProjectReference Include="..\..\shared\ContractManager.Shared.Infrastructure\ContractManager.Shared.Infrastructure.csproj" />
+	  <ProjectReference Include="..\ContractManager.Application\ContractManager.Application.csproj" />
+	  <ProjectReference Include="..\ContractManager.Data.EF\ContractManager.Data.EF.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="ContractManager.Integration.Tests" />
+	</ItemGroup>
+
+
+</Project>

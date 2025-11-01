@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageVersion Include="Ardalis.GuardClauses" Version="5.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.6">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageVersion>
+		<PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.6" />
+		<ProjectReference Include="..\..\shared\ContractManager.Shared.Data\ContractManager.Shared.Data.csproj" />
+		<ProjectReference Include="..\ContractManager.Application\ContractManager.Application.csproj" />
+		<PackageVersion Update="Microsoft.EntityFrameworkCore.Design" Version="9.0.6" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Migrations\" />
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="FluentResults" Version="3.16.0" />
+		<PackageReference Include="FluentValidation" Version="11.11.0" />
+		<PackageReference Include="MediatR" Version="12.4.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\ContractManager.Shared.Core\ContractManager.Shared.Core.csproj" />
+	  <ProjectReference Include="..\ContractManager.Shared.Data\ContractManager.Shared.Data.csproj" />
+	  <ProjectReference Include="..\ContractManager.Shared.Sdk\ContractManager.Shared.Sdk.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Configuration\" />
+	  <Folder Include="Utils\" />
+	</ItemGroup>
+
+</Project>
